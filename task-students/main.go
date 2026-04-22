@@ -63,7 +63,7 @@ students[1].AddGrade(2.5)
 students[2].AddGrade(2.0)
 
 for _, grades := range students{
-	fmt.Printf(grades.Describe())
+	fmt.Printf("%s", grades.Describe())
 }
 
 best := bestStudent(students)
