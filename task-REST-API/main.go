@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 var users = []User{
@@ -39,6 +41,23 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(user)
 
+	case http.MethodDelete:
+		idStr := strings.TrimPrefix(r.URL.Path, "/users/") // сохраняем ID в строку из ссылки
+		id, err := strconv.Atoi(idStr) // конвертируем из строки в int и проверяем на ошибки
+		if err != nil{
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		
+		for i, u := range users{ // удаление id из слайса
+			if u.ID == id {
+				users = append(users[:i], users[i+1:]...)
+				w.WriteHeader(204)
+				return
+			}
+		}
+		w.WriteHeader(http.StatusNotFound)
+	
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -46,6 +65,8 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/users", usersHandler)
+	http.HandleFunc("/users/", usersHandler)
 	fmt.Println("Сервер на :8080")
 	http.ListenAndServe(":8080", nil)
 }
+
