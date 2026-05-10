@@ -10,9 +10,10 @@ import (
 
 
 func GetTask(c *gin.Context) {
+	ctx := c.Request.Context()
 	id := c.Param("id")
 	var task models.Task
-	result := db.GetDB().First(&task, id)
+	result := db.GetDB().WithContext(ctx).First(&task, id)
 	if result.Error != nil {
 		c.JSON(404,gin.H{"error": "задача не найдена"})
 		return
@@ -23,14 +24,16 @@ func GetTask(c *gin.Context) {
 
 
 func GetTasks(c *gin.Context) {
+	ctx := c.Request.Context()
 	var tasks []models.Task
-	db.GetDB().Find(&tasks)
+	db.GetDB().WithContext(ctx).Find(&tasks)
 	c.JSON(200, tasks)
 }
 
 
 
 func CreateTask(c *gin.Context) {
+	ctx := c.Request.Context()
 	var task models.Task
 	c.ShouldBindJSON(&task)
 
@@ -38,16 +41,17 @@ func CreateTask(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "название задачи не может быть пустым"})
 		return
 	}
-	db.GetDB().Create(&task)
+	db.GetDB().WithContext(ctx).Create(&task)
 	c.JSON(201, task)
 }
 
 
 
 func UpdateTask(c *gin.Context) {
+	ctx := c.Request.Context()
 	id := c.Param("id")
 	var task models.Task
-	result := db.GetDB().First(&task, id)
+	result := db.GetDB().WithContext(ctx).First(&task, id)
 	
 	if result.Error != nil {
 		c.JSON(404, gin.H{"error": "задача не найдена"})
@@ -59,16 +63,17 @@ func UpdateTask(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "название задачи не может быть пустым"})
 		return
 	}
-	db.GetDB().Model(&task).Updates(newTask)
+	db.GetDB().WithContext(ctx).Model(&task).Updates(newTask)
 	c.JSON(200, newTask) 
 }
 
 
 
 func DeleteTask(c *gin.Context) {
+	ctx := c.Request.Context()
 	id := c.Param("id")
 	var task models.Task
-	result := db.GetDB().Delete(&task, id)
+	result := db.GetDB().WithContext(ctx).Delete(&task, id)
 	
 	if result.Error != nil {
 		c.JSON(500, gin.H{"error": "ошибка при удалении"})
