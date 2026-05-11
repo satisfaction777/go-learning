@@ -144,3 +144,16 @@ curl -X DELETE http://localhost:8080/tasks/1
 | description | string | Описание задачи |
 | done | bool | Выполнена ли задача |
 | created_at | datetime | Дата создания |
+
+
+## Настройка окружения
+
+Создай файл `.env` в корне проекта:
+
+```
+DB_HOST=localhost
+DB_USER=admin
+DB_PASSWORD=secret
+DB_NAME=goapp
+DB_PORT=5432
+```
