@@ -2,6 +2,9 @@ package db
 
 
 import (
+	"os"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
     "gorm.io/gorm"
 	"task-manager/models"
@@ -14,7 +17,17 @@ var db *gorm.DB
 
 
 func ConnectDB() {
-	dsn := "host=localhost user=admin password=secret dbname=goapp port=5432 sslmode=disable"
+
+	godotenv.Load()
+
+	host := os.Getenv("DB_HOST")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	port := os.Getenv("DB_PORT")
+
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, dbname, port)
 
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
