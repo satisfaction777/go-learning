@@ -151,7 +151,7 @@ curl -X DELETE http://localhost:8080/tasks/1
 Создай файл `.env` в корне проекта:
 
 ```
-DB_HOST=localhost
+DB_HOST=db
 DB_USER=admin
 DB_PASSWORD=secret
 DB_NAME=goapp
